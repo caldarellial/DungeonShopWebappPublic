@@ -1,0 +1,207 @@
+<div class="float-left">
+	<p>{{activeObj.class}}</p>
+	<p>{{activeObj.description}}</p>
+</div>
+<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='class_action'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('class_action');"></i>
+<label>Class Actions/Stats</label>
+<table>
+	<tr>
+		<th>Action</th>
+		<th>Value</th>
+		<th>Spread</th>
+		<th>Chance</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='class_action'">
+		<td>
+			<p ng-show="addingVals.action">{{addingVals.actionObj.action}} <i class="fa fa-close" ng-click="addingVals.action=false;"></i></p>
+			<span ng-show="!addingVals.action">
+				<input class="form-control" type="text" ng-model="addingVals.actionSearch">
+				<hr class="action-search-hr">
+				<p ng-show="addingVals.actionSearch && addingVals.actionSearch !== ''" ng-repeat="action in actions | filter:addingVals.actionSearch | limitTo:5" ng-click="addingVals.action = action.id; addingVals.actionObj = action; $event.stopPropagation();">{{action.action}}</p>
+				<p ng-show="!addingVals.actionSearch || addingVals.actionSearch == ''">Search for an action!</p>
+			</span>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.value">
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.spread">
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.chance">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="action in activeObj.actions">
+		<td>
+			<span ng-show="!isEditing(action,'action')" ng-click="doubleClickForEditing(action,'action',$event);">{{action.action_name}}</span>
+			<span ng-if="isEditing(action,'action')">
+				<p ng-show="clickedForEditing.val">{{clickedForEditing.val==clickedForEditing.obj.action?clickedForEditing.obj.action_name:clickedForEditing.action_name}} <i class="fa fa-close" ng-click="clickedForEditing.val=false;"></i></p>
+				<span ng-show="!clickedForEditing.val">
+					<input class="form-control" type="text" ng-model="clickedForEditing.actionSearch">
+					<hr class="action-search-hr">
+					<p ng-show="clickedForEditing.actionSearch && clickedForEditing.actionSearch !== ''" ng-repeat="action in actions | filter:clickedForEditing.actionSearch | limitTo:5" ng-click="clickedForEditing.val = action.id; clickedForEditing.action_name = action.action; $event.stopPropagation();">{{action.action}}</p>
+					<p ng-show="!clickedForEditing.actionSearch || clickedForEditing.actionSearch == ''">Search for an action!</p>
+				</span>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'value')" ng-click="doubleClickForEditing(action,'value',$event);">{{action.value}}</span>
+			<span ng-if="isEditing(action,'value')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'spread')" ng-click="doubleClickForEditing(action,'spread',$event);">{{action.spread}}</span>
+			<span ng-if="isEditing(action,'spread')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'chance')" ng-click="doubleClickForEditing(action,'chance',$event);">{{action.chance}}</span>
+			<span ng-if="isEditing(action,'chance')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(action,$event);"></i>
+		</td>
+	</tr>
+</table>
+
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='class_item_pool'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('class_item_pool');"></i>
+<label>Class Item Pools</label>
+<table>
+	<tr>
+		<th>Pool</th>
+		<th>Occurrence Multiplier</th>
+		<th>Chance</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='class_item_pool'">
+		<td>
+			<p ng-show="addingVals.pool">{{addingVals.poolObj.pool}} <i class="fa fa-close" ng-click="addingVals.pool=false;"></i></p>
+			<span ng-show="!addingVals.pool">
+				<input class="form-control" type="text" ng-model="addingVals.poolSearch">
+				<hr class="action-search-hr">
+				<p ng-show="addingVals.poolSearch && addingVals.poolSearch !== ''" ng-repeat="pool in item_pools | filter:addingVals.poolSearch | limitTo:5" ng-click="addingVals.pool = pool.id; addingVals.poolObj = pool; $event.stopPropagation();">{{pool.pool}}</p>
+				<p ng-show="!addingVals.poolSearch || addingVals.poolSearch == ''">Search for an item pool!</p>
+			</span>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.mod_occurrence">
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.chance">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="item_pool in activeObj.item_pools">
+		<td>
+			<span ng-show="!isEditing(item_pool,'pool')" ng-click="doubleClickForEditing(item_pool,'pool',$event);">{{item_pool.pool_name}}</span>
+			<span ng-if="isEditing(item_pool,'pool')">
+				<p ng-show="clickedForEditing.val">{{clickedForEditing.val==clickedForEditing.obj.pool?clickedForEditing.obj.pool_name:clickedForEditing.pool_name}} <i class="fa fa-close" ng-click="clickedForEditing.val=false;"></i></p>
+				<span ng-show="!clickedForEditing.val">
+					<input class="form-control" type="text" ng-model="clickedForEditing.poolSearch">
+					<hr class="action-search-hr">
+					<p ng-show="clickedForEditing.poolSearch && clickedForEditing.poolSearch !== ''" ng-repeat="pool in item_pools | filter:clickedForEditing.poolSearch | limitTo:5" ng-click="clickedForEditing.val = pool.id; clickedForEditing.pool_name = pool.pool; $event.stopPropagation();">{{pool.pool}}</p>
+					<p ng-show="!clickedForEditing.poolSearch || clickedForEditing.poolSearch == ''">Search for an item pool!</p>
+				</span>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(item_pool,'mod_occurrence')" ng-click="doubleClickForEditing(item_pool,'mod_occurrence',$event);">{{item_pool.mod_occurrence}}</span>
+			<span ng-if="isEditing(item_pool,'mod_occurrence')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(item_pool,'chance')" ng-click="doubleClickForEditing(item_pool,'chance',$event);">{{item_pool.chance}}</span>
+			<span ng-if="isEditing(item_pool,'chance')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(item_pool,$event);"></i>
+		</td>
+	</tr>
+</table>
+
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='class_quest_type'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('class_quest_type');"></i>
+<label>Class Quest Types</label>
+<table>
+	<tr>
+		<th>Quest Type</th>
+		<th>Occurrence Multiplier</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='class_quest_type'">
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.quest_type" ng-click="$event.stopPropagation();" ng-options="op.id as op.quest_type for op in quest_types"></select>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.mod_occurrence">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="quest_type in activeObj.quest_types">
+		<td>
+			<span ng-show="!isEditing(quest_type,'quest_type')" ng-click="doubleClickForEditing(quest_type,'quest_type',$event);">{{questTypeWithId(quest_type.quest_type).quest_type}}</span>
+			<span ng-if="isEditing(quest_type,'quest_type')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.quest_type" ng-click="$event.stopPropagation();" ng-options="op.id as op.quest_type for op in quest_types"></select>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(quest_type,'mod_occurrence')" ng-click="doubleClickForEditing(quest_type,'mod_occurrence',$event);">{{quest_type.mod_occurrence}}</span>
+			<span ng-if="isEditing(quest_type,'mod_occurrence')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(quest_type,$event);"></i>
+		</td>
+	</tr>
+</table>

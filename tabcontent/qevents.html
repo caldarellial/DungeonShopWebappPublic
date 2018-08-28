@@ -1,0 +1,95 @@
+<div ng-show="activeObj && getObjectType(activeObj).type=='event'" ng-include="'tabcontent/event_details.html?v={{version}}'"></div>
+<div ng-show="activeObj && getObjectType(activeObj).type=='solution'" ng-include="'tabcontent/solution_details.html?v={{version}}'"></div>
+<div ng-show="!activeObj">
+	<i class="fa fa-3x float-right" ng-class="addingObj=='event'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('event');"></i>
+	<span class="clearfix"></span>
+	<table>
+		<tr>
+			<th ng-click="toggleSort('id');">ID <i class="fa" ng-class="(sortBy=='id')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('name');">Name <i class="fa" ng-class="(sortBy=='name')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('description');">Description <i class="fa" ng-class="(sortBy=='description')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('tier');">Tier <i class="fa" ng-class="(sortBy=='value')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('occurence');">Occurence <i class="fa" ng-class="(sortBy=='consumable')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('uses');">Danger <i class="fa" ng-class="(sortBy=='uses')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th><i class="fa fa-gear"></i></th>
+		</tr>
+		<tr ng-if="addingObj=='event'">
+			<td></td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.name">
+			</td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.description">
+			</td>
+			<td>
+				<input class="form-control" type="number" ng-model="addingVals.tier">
+			</td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.occurence">
+			</td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.danger">
+			</td>
+			<td>
+				<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+			</td>
+		</tr>
+		<tr ng-repeat="event in questEvents | orderBy:sortBy:reverseSort">
+			<td>{{event.id}}</td>
+			<td>
+				<span ng-show="!isEditing(event,'name')" ng-click="doubleClickForEditing(event,'name',$event);">{{event.name}} <i class="far fa-edit" ng-click="setEditing(event,'name',$event);"></i></span>
+				<span ng-if="isEditing(event,'name')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(event,'description')" ng-click="doubleClickForEditing(event,'description',$event);">{{event.description}} <i class="far fa-edit" ng-click="setEditing(event,'description',$event);"></i></span>
+				<span ng-if="isEditing(event,'description')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(event,'tier')" ng-click="doubleClickForEditing(event,'tier',$event);">{{event.tier}}</span>
+				<span ng-if="isEditing(event,'tier')">
+					<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(event,'occurence')" ng-click="doubleClickForEditing(event,'occurence',$event);">{{event.occurence}}</span>
+				<span ng-if="isEditing(event,'occurence')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(event,'danger')" ng-click="doubleClickForEditing(event,'danger',$event);">{{event.danger}}</span>
+				<span ng-if="isEditing(event,'danger')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<i class="fa fa-search" ng-click="setActiveObj(event);"></i>
+				<i class="fa fa-close" ng-click="removeObj(event,$event);"></i>
+			</td>
+		</tr>
+	</table>
+</div>

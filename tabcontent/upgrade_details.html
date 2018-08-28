@@ -1,0 +1,48 @@
+<div class="float-left">
+	<p>{{activeObj.name}}</p>
+	<p>{{activeObj.description}}</p>
+</div>
+<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='upgraderequirement'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('upgraderequirement');"></i>
+<table>
+	<tr>
+		<th>Required</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='upgraderequirement'">
+		<td>
+			<p ng-show="addingVals.required">{{addingVals.requiredObj.name}} <i class="fa fa-close" ng-click="addingVals.required=false;"></i></p>
+			<span ng-show="!addingVals.required">
+				<input class="form-control" type="text" ng-model="addingVals.upgradeSearch">
+				<hr class="action-search-hr">
+				<p ng-show="addingVals.upgradeSearch && addingVals.upgradeSearch !== ''" ng-repeat="upgrade in upgrades | filter:addingVals.upgradeSearch | limitTo:5" ng-click="addingVals.required = upgrade.id; addingVals.requiredObj = upgrade; $event.stopPropagation();">{{upgrade.name}}</p>
+				<p ng-show="!addingVals.upgradeSearch || addingVals.upgradeSearch == ''">Search for an upgrade!</p>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="requirement in activeObj.requirements">
+		<td>
+			<span ng-show="!isEditing(requirement,'required')" ng-click="doubleClickForEditing(requirement,'required',$event);">{{requirement.upgrade_name}}</span>
+			<span ng-if="isEditing(requirement,'required')">
+				<p ng-show="clickedForEditing.val">{{clickedForEditing.val==clickedForEditing.obj.required?clickedForEditing.obj.upgrade_name:clickedForEditing.upgrade_name}} <i class="fa fa-close" ng-click="clickedForEditing.val=false;"></i></p>
+				<span ng-show="!clickedForEditing.val">
+					<input class="form-control" type="text" ng-model="clickedForEditing.upgradeSearch">
+					<hr class="action-search-hr">
+					<p ng-show="clickedForEditing.upgradeSearch && clickedForEditing.upgradeSearch !== ''" ng-repeat="upgrade in upgrades | filter:clickedForEditing.upgradeSearch | limitTo:5" ng-click="clickedForEditing.val = upgrade.id; clickedForEditing.upgrade_name = upgrade.name; $event.stopPropagation();">{{upgrade.name}}</p>
+					<p ng-show="!clickedForEditing.upgradeSearch || clickedForEditing.upgradeSearch == ''">Search for an upgrade!</p>
+				</span>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(requirement,$event);"></i>
+		</td>
+	</tr>
+</table>

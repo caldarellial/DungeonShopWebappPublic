@@ -1,0 +1,59 @@
+<div class="float-left">
+	<p>{{activeObj.quest_pool}}</p>
+</div>
+<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='quest_pool_event'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('quest_pool_event');"></i>
+<table>
+	<tr>
+		<th>Event</th>
+		<th>Tier</th>
+		<th>Occurrence</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='quest_pool_event'">
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.quest_event" ng-click="$event.stopPropagation();" ng-options="op.id as op.name for op in questEvents"></select>
+		</td>
+		<td>
+			<input class="form-control" type="number" ng-model="addingVals.tier">
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.occurrence">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="quest_event in activeObj.quest_events">
+		<td>
+			<span ng-show="!isEditing(quest_event,'quest_event')" ng-click="doubleClickForEditing(quest_event,'quest_event',$event);">{{questEventWithId(quest_event.quest_event).name;}}</span>
+			<span ng-if="isEditing(quest_event,'quest_event')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.quest_event" ng-click="$event.stopPropagation();" ng-options="op.id as op.name for op in questEvents"></select>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(quest_event,'tier')" ng-click="doubleClickForEditing(quest_event,'tier',$event);">{{quest_event.tier}}</span>
+			<span ng-if="isEditing(quest_event,'tier')">
+				<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(quest_event,'occurrence')" ng-click="doubleClickForEditing(quest_event,'occurrence',$event);">{{quest_event.occurrence}}</span>
+			<span ng-if="isEditing(quest_event,'occurrence')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(quest_event,$event);"></i>
+		</td>
+	</tr>
+</table>

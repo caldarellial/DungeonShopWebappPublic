@@ -1,0 +1,252 @@
+<div class="float-left">
+	<p>{{activeObj.name}}</p>
+	<p>{{activeObj.description}}</p>
+</div>
+<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='itemaction'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('itemaction');"></i>
+<label>Item Actions</label>
+<table>
+	<tr>
+		<th>Action</th>
+		<th>Value</th>
+		<th>Target</th>
+		<th>Frequency</th>
+		<th>Stamina Cost</th>
+		<th>Mana Cost</th>
+		<th>Length (Turns/Use)</th>
+		<th>Crit Chance</th>
+		<th>Chance</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='itemaction'">
+		<td>
+			<p ng-show="addingVals.action">{{addingVals.actionObj.action}} <i class="fa fa-close" ng-click="addingVals.action=false;"></i></p>
+			<span ng-show="!addingVals.action">
+				<input class="form-control" type="text" ng-model="addingVals.actionSearch">
+				<hr class="action-search-hr">
+				<p ng-show="addingVals.actionSearch && addingVals.actionSearch !== ''" ng-repeat="action in actions | filter:addingVals.actionSearch | limitTo:5" ng-click="addingVals.action = action.id; addingVals.actionObj = action; $event.stopPropagation();">{{action.action}}</p>
+				<p ng-show="!addingVals.actionSearch || addingVals.actionSearch == ''">Search for an action!</p>
+			</span>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.value">
+		</td>
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.target" ng-click="$event.stopPropagation();" ng-options="op as op.toTitleCase() for op in ['world','self','friendly','party','enemy','enemy party']"></select>
+		</td>
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.frequency" ng-click="$event.stopPropagation();" ng-options="op as op.toTitleCase() for op in ['choice','always']"></select>
+		</td>
+		<td>
+			<input class="form-control" type="number" ng-model="addingVals.stamina_cost">
+		</td>
+		<td>
+			<input class="form-control" type="number" ng-model="addingVals.mana_cost">
+		</td>
+		<td>
+			<input class="form-control" type="number" ng-model="addingVals.length">
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.crit_chance">
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.chance">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="action in activeObj.actions">
+		<td>
+			<span ng-show="!isEditing(action,'action')" ng-click="doubleClickForEditing(action,'action',$event);">{{action.action_name}}</span>
+			<span ng-if="isEditing(action,'action')">
+				<p ng-show="clickedForEditing.val">{{clickedForEditing.val==clickedForEditing.obj.action?clickedForEditing.obj.action_name:clickedForEditing.action_name}} <i class="fa fa-close" ng-click="clickedForEditing.val=false;"></i></p>
+				<span ng-show="!clickedForEditing.val">
+					<input class="form-control" type="text" ng-model="clickedForEditing.actionSearch">
+					<hr class="action-search-hr">
+					<p ng-show="clickedForEditing.actionSearch && clickedForEditing.actionSearch !== ''" ng-repeat="action in actions | filter:clickedForEditing.actionSearch | limitTo:5" ng-click="clickedForEditing.val = action.id; clickedForEditing.action_name = action.action; $event.stopPropagation();">{{action.action}}</p>
+					<p ng-show="!clickedForEditing.actionSearch || clickedForEditing.actionSearch == ''">Search for an action!</p>
+				</span>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'value')" ng-click="doubleClickForEditing(action,'value',$event);">{{action.value}}</span>
+			<span ng-if="isEditing(action,'value')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'target')" ng-click="doubleClickForEditing(action,'target',$event);">{{action.target.toTitleCase()}}</span>
+			<span ng-if="isEditing(action,'target')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op as op.toTitleCase() for op in ['world','self','friendly','party','enemy','enemy party']"></select>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'frequency')" ng-click="doubleClickForEditing(action,'frequency',$event);">{{action.frequency.toTitleCase()}}</span>
+			<span ng-if="isEditing(action,'frequency')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op as op.toTitleCase() for op in ['choice','always']"></select>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'stamina_cost')" ng-click="doubleClickForEditing(action,'stamina_cost',$event);">{{action.stamina_cost}}</span>
+			<span ng-if="isEditing(action,'stamina_cost')">
+				<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'mana_cost')" ng-click="doubleClickForEditing(action,'mana_cost',$event);">{{action.mana_cost}}</span>
+			<span ng-if="isEditing(action,'mana_cost')">
+				<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'length')" ng-click="doubleClickForEditing(action,'length',$event);">{{action.length}}</span>
+			<span ng-if="isEditing(action,'length')">
+				<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'crit_chance')" ng-click="doubleClickForEditing(action,'crit_chance',$event);">{{action.crit_chance}}</span>
+			<span ng-if="isEditing(action,'crit_chance')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(action,'chance')" ng-click="doubleClickForEditing(action,'chance',$event);">{{action.chance}}</span>
+			<span ng-if="isEditing(action,'chance')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(false,action,$event);"></i>
+		</td>
+	</tr>
+</table>
+
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='recipe'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('recipe');"></i>
+<label>Recipes</label>
+<table>
+	<tr>
+		<th>Yield</th>
+		<th>Requirement</th>
+		<th>Required Element</th>
+		<th>Ingredients</th>
+		<th>Visible Before</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='recipe'">
+		<td>
+			<input class="form-control" type="number" ng-model="addingVals.yield">
+		</td>
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.requirement" ng-click="$event.stopPropagation();" ng-options="op as op.toTitleCase() for op in ['none','upgrade','item']"></select>
+		</td>
+		<td>
+			<select ng-if="addingVals.requirement=='upgrade'" class="form-control" type="text" ng-model="addingVals.requirementid" ng-click="$event.stopPropagation();" ng-options="op.id as op.name for op in upgrades"></select>
+			<select ng-if="addingVals.requirement=='item'" class="form-control" type="text" ng-model="addingVals.requirementid" ng-click="$event.stopPropagation();" ng-options="op.id as op.name for op in items"></select>
+		</td>
+		<td></td>
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.visible_before" ng-click="$event.stopPropagation();" ng-options="op.val as op.label for op in [{val:0,label:'Hidden'},{val:1,label:'Visible'}]"></select>
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="recipe in activeObj.recipes">
+		<td>
+			<span ng-show="!isEditing(recipe,'yield')" ng-click="doubleClickForEditing(recipe,'yield',$event);">{{recipe.yield}}</span>
+			<span ng-if="isEditing(recipe,'yield')">
+				<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(recipe,'requirement')" ng-click="doubleClickForEditing(recipe,'requirement',$event);">{{recipe.requirement.toTitleCase();}}</span>
+			<span ng-if="isEditing(recipe,'requirement')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op as op.toTitleCase() for op in ['none','upgrade','item']"></select>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(recipe,'requirementid')" ng-click="doubleClickForEditing(recipe,'requirementid',$event);">{{getRequiredRecipeElement(recipe)?getRequiredRecipeElement(recipe):''}}</span>
+			<span ng-if="isEditing(recipe,'requirementid')">
+				<select ng-if="recipe.requirement=='upgrade'" class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op.id as op.name for op in upgrades"></select>
+				<select ng-if="recipe.requirement=='item'" class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op.id as op.name for op in items"></select>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa float-right" ng-class="(innerAdding=='ingredient' && innerAddingOuter==recipe)?'fa-minus':'fa-plus'" ng-click="toggleAddingInner('ingredient',recipe);"></i>
+			<span ng-show="(innerAdding=='ingredient' && innerAddingOuter==recipe)">
+				<select class="form-control" type="text" ng-model="innerAddingVals.item" ng-click="$event.stopPropagation();" ng-options="op.id as op.name for op in items"></select>
+				<input class="form-control" type="number" ng-model="innerAddingVals.item_num" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitAddInner(recipe,innerAddingVals,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="toggleAddingInner('ingredient');"></i>
+				</center>
+			</span>
+			<p ng-repeat="ingredient in recipe.ingredients">{{itemWithId(ingredient.item).name}} x{{ingredient.item_num}} <i class="fa fa-close" ng-click="removeObj(recipe,ingredient,$event);"></i></p>
+		</td>
+		<td>
+			<span ng-show="!isEditing(recipe,'visible_before')" ng-click="doubleClickForEditing(recipe,'visible_before',$event);">{{recipe.visible_before==0?'Hidden':'Visible';}}</span>
+			<span ng-if="isEditing(recipe,'visible_before')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op.val as op.label for op in [{val:0,label:'Hidden'},{val:1,label:'Visible'}]"></select>
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(false,recipe,$event);"></i>
+		</td>
+	</tr>
+</table>

@@ -1,0 +1,82 @@
+<div ng-show="activeObj" ng-include="'tabcontent/class_details.html?v={{version}}'">
+	
+</div>
+<div ng-show="!activeObj">
+	<i class="fa fa-3x float-right" ng-class="addingObj=='class'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('class');"></i>
+	<span class="clearfix"></span>
+	<table>
+		<tr>
+			<th ng-click="toggleSort('id');">ID <i class="fa" ng-class="(sortBy=='id')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('class');">Name <i class="fa" ng-class="(sortBy=='class')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('description');">Description <i class="fa" ng-class="(sortBy=='description')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('tier');">Tier <i class="fa" ng-class="(sortBy=='tier')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('occurrence');">Occurrence <i class="fa" ng-class="(sortBy=='occurrence')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th><i class="fa fa-gear"></i></th>
+		</tr>
+		<tr ng-if="addingObj=='class'">
+			<td></td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.class">
+			</td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.description">
+			</td>
+			<td>
+				<input class="form-control" type="number" ng-model="addingVals.tier">
+			</td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.occurrence">
+			</td>
+			<td>
+				<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+			</td>
+		</tr>
+		<tr ng-repeat="class in classes | orderBy:sortBy:reverseSort">
+			<td>{{class.id}}</td>
+			<td>
+				<span ng-show="!isEditing(class,'class')" ng-click="doubleClickForEditing(class,'class',$event);">{{class.class}} <i class="far fa-edit" ng-click="setEditing(class,'class',$event);"></i></span>
+				<span ng-if="isEditing(class,'class')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(class,'description')" ng-click="doubleClickForEditing(class,'description',$event);">{{class.description}}  <i class="far fa-edit" ng-click="setEditing(class,'description',$event);"></i></span>
+				<span ng-if="isEditing(class,'description')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(class,'tier')" ng-click="doubleClickForEditing(class,'tier',$event);">{{class.tier}}</span>
+				<span ng-if="isEditing(class,'tier')">
+					<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(class,'occurrence')" ng-click="doubleClickForEditing(class,'occurrence',$event);">{{class.occurrence}}</span>
+				<span ng-if="isEditing(class,'occurrence')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<i class="fa fa-search" ng-click="setActiveObj(class);"></i>
+				<i class="fa fa-close" ng-click="removeObj(class,$event);"></i>
+			</td>
+		</tr>
+	</table>
+</div>

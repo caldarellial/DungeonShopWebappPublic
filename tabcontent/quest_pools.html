@@ -1,0 +1,38 @@
+<div ng-show="activeObj" ng-include="'tabcontent/quest_pool_details.html?v={{version}}'"></div>
+<div ng-show="!activeObj">
+	<i class="fa fa-3x float-right" ng-class="addingObj=='quest_pool'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('quest_pools');"></i>
+	<span class="clearfix"></span>
+	<table>
+		<tr>
+			<th ng-click="toggleSort('id');">ID <i class="fa" ng-class="(sortBy=='id')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('quest_pool');">Name <i class="fa" ng-class="(sortBy=='quest_pool')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th><i class="fa fa-gear"></i></th>
+		</tr>
+		<tr ng-if="addingObj=='quest_pools'">
+			<td></td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.quest_pool">
+			</td>
+			<td>
+				<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+			</td>
+		</tr>
+		<tr ng-repeat="quest_pool in quest_pools | orderBy:sortBy:reverseSort">
+			<td>{{quest_pool.id}}</td>
+			<td>
+				<span ng-show="!isEditing(quest_pool,'quest_pool')" ng-click="doubleClickForEditing(quest_pool,'quest_pool',$event);">{{quest_pool.quest_pool}}</span>
+				<span ng-if="isEditing(quest_pool,'quest_pool')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<i class="fa fa-search" ng-click="setActiveObj(quest_pool);"></i>
+				<i class="fa fa-close" ng-click="removeObj(quest_pool,$event);"></i>
+			</td>
+		</tr>
+	</table>
+</div>

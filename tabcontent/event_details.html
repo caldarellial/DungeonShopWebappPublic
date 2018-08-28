@@ -1,0 +1,74 @@
+<div class="float-left">
+	<p>{{activeObj.name}}</p>
+	<p>{{activeObj.description}}</p>
+</div>
+<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='solution'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('solution');"></i>
+<label>Solutions</label>
+<table>
+	<tr>
+		<th>ID</th>
+		<th>Probability</th>
+		<th>Actions</th>
+		<th>Success</th>
+		<th>Failure</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='solution'">
+		<td></td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.probability">
+		</td>
+		<td></td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.success">
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.failure">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="solution in activeObj.solutions">
+		<td>
+			{{solution.id}}
+		</td>
+		<td>
+			<span ng-show="!isEditing(solution,'probability')" ng-click="doubleClickForEditing(solution,'probability',$event);">{{solution.probability}}</span>
+			<span ng-if="isEditing(solution,'probability')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>{{solution.actions.length}}</td>
+		<td>
+			<span ng-show="!isEditing(solution,'success')" ng-click="doubleClickForEditing(solution,'success',$event);">{{solution.success}} <i class="far fa-edit" ng-click="setEditing(solution,'success',$event);"></i></span>
+			<span ng-if="isEditing(solution,'success')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(solution,'failure')" ng-click="doubleClickForEditing(solution,'failure',$event);">{{solution.failure}} <i class="far fa-edit" ng-click="setEditing(solution,'failure',$event);"></i></span>
+			<span ng-if="isEditing(solution,'failure')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-search" ng-click="setActiveObj(solution);"></i>
+			<i class="fa fa-close" ng-click="removeObj(solution,$event);"></i>
+		</td>
+	</tr>
+</table>

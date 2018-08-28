@@ -1,0 +1,45 @@
+<div ng-show="activeObj">
+	<div class="float-left">
+		<p>{{activeObj.name}}</p>
+		<p>Stats and util will go here later, ie which events it is a solution to and which items perform it</p>
+	</div>
+	<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+	<hr class="clearfix">
+</div>
+<div ng-show="!activeObj">
+	<i class="fa fa-3x float-right" ng-class="addingObj=='action'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('action');"></i>
+	<span class="clearfix"></span>
+	<table>
+		<tr>
+			<th ng-click="toggleSort('id');">ID <i class="fa" ng-class="(sortBy=='id')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('action');">Action <i class="fa" ng-class="(sortBy=='action')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th><i class="fa fa-gear"></i></th>
+		</tr>
+		<tr ng-if="addingObj=='action'">
+			<td></td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.action">
+			</td>
+			<td>
+				<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+			</td>
+		</tr>
+		<tr ng-repeat="action in actions | orderBy:sortBy:reverseSort">
+			<td>{{action.id}}</td>
+			<td>
+				<span ng-show="!isEditing(action,'action')" ng-click="doubleClickForEditing(action,'action',$event);">{{action.action}}</span>
+				<span ng-if="isEditing(action,'action')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<i class="fa fa-search" ng-click="setActiveObj(action);"></i>
+				<i class="fa fa-close" ng-click="removeObj(false,action,$event);"></i>
+			</td>
+		</tr>
+	</table>
+</div>

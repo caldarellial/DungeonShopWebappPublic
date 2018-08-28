@@ -1,0 +1,80 @@
+<div ng-show="activeObj" ng-include="'tabcontent/upgrade_details.html?v={{version}}'"></div>
+<div ng-show="!activeObj">
+	<i class="fa fa-3x float-right" ng-class="addingObj=='upgrade'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('upgrade');"></i>
+	<span class="clearfix"></span>
+	<table>
+		<tr>
+			<th ng-click="toggleSort('id');">ID <i class="fa" ng-class="(sortBy=='id')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('name');">Name <i class="fa" ng-class="(sortBy=='name')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('description');">Description <i class="fa" ng-class="(sortBy=='description')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('cost');">Cost <i class="fa" ng-class="(sortBy=='cost')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('type');">Type <i class="fa" ng-class="(sortBy=='type')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th><i class="fa fa-gear"></i></th>
+		</tr>
+		<tr ng-if="addingObj=='upgrade'">
+			<td></td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.name">
+			</td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.description">
+			</td>
+			<td>
+				<input class="form-control" type="number" ng-model="addingVals.cost">
+			</td>
+			<td>
+				<select class="form-control" type="text" ng-model="addingVals.type" ng-options="op as op.toTitleCase() for op in ['attribute','renovation']"></select>
+			</td>
+			<td>
+				<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+			</td>
+		</tr>
+		<tr ng-repeat="upgrade in upgrades | orderBy:sortBy:reverseSort">
+			<td>{{upgrade.id}}</td>
+			<td>
+				<span ng-show="!isEditing(upgrade,'name')" ng-click="doubleClickForEditing(upgrade,'name',$event);">{{upgrade.name}} <i class="far fa-edit" ng-click="setEditing(upgrade,'name',$event);"></i></span>
+				<span ng-if="isEditing(upgrade,'name')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(upgrade,'description')" ng-click="doubleClickForEditing(upgrade,'description',$event);">{{upgrade.description}}  <i class="far fa-edit" ng-click="setEditing(upgrade,'description',$event);"></i></span>
+				<span ng-if="isEditing(upgrade,'description')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(upgrade,'cost')" ng-click="doubleClickForEditing(upgrade,'cost',$event);">{{upgrade.cost}}</span>
+				<span ng-if="isEditing(upgrade,'cost')">
+					<input class="form-control" type="number" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<span ng-show="!isEditing(upgrade,'type')" ng-click="doubleClickForEditing(upgrade,'type',$event);">{{upgrade.type.toTitleCase()}}</span>
+				<span ng-if="isEditing(upgrade,'type')">
+					<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op as op.toTitleCase() for op in ['attribute','renovation']"></select>
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<i class="fa fa-search" ng-click="setActiveObj(upgrade);"></i>
+				<i class="fa fa-close" ng-click="removeObj(upgrade,$event);"></i>
+			</td>
+		</tr>
+	</table>
+</div>

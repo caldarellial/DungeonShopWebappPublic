@@ -1,0 +1,8 @@
+<div class="form-group">
+	<label>Export Tables</label>
+	<div class="form-inline">
+		<select ng-model="selectedCol" ng-options="col for col in totalCols" class="form-control"></select>
+		<button class="square-btn inline" ng-click="submitExportTable(selectedCol);"><i class="fa fa-upload fa-2x"></i></button>
+	</div>
+</div>
+<button class="btn-rect" ng-click="exportSchemas();">Export Schemas <i class="fa fa-upload"></i></button>

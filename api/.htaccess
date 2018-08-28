@@ -1,0 +1,17 @@
+Header set Access-Control-Allow-Origin "*"
+
+# Turn on URL rewriting
+RewriteEngine On
+RewriteRule ^assets - [L,NC]
+RewriteRule ^school - [L,NC]
+RewriteCond %{REQUEST_URI} sandbox
+RewriteRule ^([^/]*)/([^/]*)/([^/]*)$ apiredirect.php?sandbox=$1&section=$2&call=$3 [L]
+RewriteRule ^([^/]*)/([^/]*)$ apiredirect.php?section=$1&call=$2 [L]
+# RewriteRule ^([^/]*)$/([^/]*)$ /$1/$2.php [L]
+
+Options -Indexes
+
+<files config.php>
+    order allow,deny
+    deny from all
+</files>

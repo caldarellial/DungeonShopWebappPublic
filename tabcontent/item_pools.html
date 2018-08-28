@@ -1,0 +1,38 @@
+<div ng-show="activeObj" ng-include="'tabcontent/item_pool_details.html?v={{version}}'"></div>
+<div ng-show="!activeObj">
+	<i class="fa fa-3x float-right" ng-class="addingObj=='item_pool'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('item_pool');"></i>
+	<span class="clearfix"></span>
+	<table>
+		<tr>
+			<th ng-click="toggleSort('id');">ID <i class="fa" ng-class="(sortBy=='id')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th ng-click="toggleSort('pool');">Name <i class="fa" ng-class="(sortBy=='pool')?(reverseSort?'fa-sort-up':'fa-sort-down'):'fa-sort'"></i></th>
+			<th><i class="fa fa-gear"></i></th>
+		</tr>
+		<tr ng-if="addingObj=='item_pool'">
+			<td></td>
+			<td>
+				<input class="form-control" type="text" ng-model="addingVals.pool">
+			</td>
+			<td>
+				<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+			</td>
+		</tr>
+		<tr ng-repeat="item_pool in item_pools | orderBy:sortBy:reverseSort">
+			<td>{{item_pool.id}}</td>
+			<td>
+				<span ng-show="!isEditing(item_pool,'pool')" ng-click="doubleClickForEditing(item_pool,'pool',$event);">{{item_pool.pool}}</span>
+				<span ng-if="isEditing(item_pool,'pool')">
+					<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+					<center>
+						<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+						<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+					</center>
+				</span>
+			</td>
+			<td>
+				<i class="fa fa-search" ng-click="setActiveObj(item_pool);"></i>
+				<i class="fa fa-close" ng-click="removeObj(item_pool,$event);"></i>
+			</td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,99 @@
+<div class="float-left">
+	<p>{{activeObj.enemy_name}}</p>
+</div>
+<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='enemy_action'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('enemy_action');"></i>
+<label>Actions</label>
+<table>
+	<tr>
+		<th>Action</th>
+		<th>Value</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='enemy_action'">
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.action" ng-click="$event.stopPropagation();" ng-options="op.id as op.action for op in actions"></select>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.value">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="enemy_action in activeObj.actions">
+		<td>
+			<span ng-show="!isEditing(enemy_action,'action')" ng-click="doubleClickForEditing(enemy_action,'action',$event);">{{actionWithId(enemy_action.action).action;}}</span>
+			<span ng-if="isEditing(enemy_action,'action')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op.id as op.action for op in actions"></select>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(enemy_action,'value')" ng-click="doubleClickForEditing(enemy_action,'value',$event);">{{enemy_action.value}}</span>
+			<span ng-if="isEditing(enemy_action,'value')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(enemy_action,$event);"></i>
+		</td>
+	</tr>
+</table>
+
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='enemy_item_pool'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('enemy_item_pool');"></i>
+<label>Item Pools</label>
+<table>
+	<tr>
+		<th>Item Pool</th>
+		<th>Type</th>
+		<th>Occurrence</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='enemy_item_pool'">
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.item_pool" ng-click="$event.stopPropagation();" ng-options="op.id as op.pool for op in item_pools"></select>
+		</td>
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.type" ng-click="$event.stopPropagation();" ng-options="op.toTitleCase() for op in enemyPoolTypes"></select>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.occurrence">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="enemy_item_pool in activeObj.item_pools">
+		<td>
+			<span ng-show="!isEditing(enemy_item_pool,'item_pool')" ng-click="doubleClickForEditing(enemy_item_pool,'item_pool',$event);">{{itemPoolWithId(enemy_item_pool.item_pool).pool;}}</span>
+			<span ng-if="isEditing(enemy_item_pool,'item_pool')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op.id as op.pool for op in item_pools"></select>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(enemy_item_pool,'type')" ng-click="doubleClickForEditing(enemy_item_pool,'type',$event);">{{enemy_item_pool.type.toTitleCase();}}</span>
+			<span ng-if="isEditing(enemy_item_pool,'type')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op.toTitleCase() for op in enemyPoolTypes"></select>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(enemy_item_pool,'occurrence')" ng-click="doubleClickForEditing(enemy_item_pool,'occurrence',$event);">{{enemy_item_pool.occurrence}}</span>
+			<span ng-if="isEditing(enemy_item_pool,'occurrence')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(enemy_item_pool,$event);"></i>
+		</td>
+	</tr>
+</table>

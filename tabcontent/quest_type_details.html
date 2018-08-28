@@ -1,0 +1,89 @@
+<div class="float-left">
+	<p>{{activeObj.quest_type}}</p>
+</div>
+<i class="fa fa-close fa-3x float-right" ng-click="setActiveObj(false);"></i>
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='quest_type_pool'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('quest_type_pool');"></i>
+<label>Quest Pools</label>
+<table>
+	<tr>
+		<th>Quest Pool</th>
+		<th>Occurrence</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='quest_type_pool'">
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.quest_pool" ng-click="$event.stopPropagation();" ng-options="op.id as op.quest_pool for op in quest_pools"></select>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.occurrence">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="quest_type_pool in activeObj.quest_type_pools">
+		<td>
+			<span ng-show="!isEditing(quest_type_pool,'quest_pool')" ng-click="doubleClickForEditing(quest_type_pool,'quest_pool',$event);">{{questPoolWithId(quest_type_pool.quest_pool).quest_pool;}}</span>
+			<span ng-if="isEditing(quest_type_pool,'quest_pool')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.quest_event" ng-click="$event.stopPropagation();" ng-options="op.id as op.quest_pool for op in quest_pools"></select>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(quest_type_pool,'occurrence')" ng-click="doubleClickForEditing(quest_type_pool,'occurrence',$event);">{{quest_type_pool.occurrence}}</span>
+			<span ng-if="isEditing(quest_type_pool,'occurrence')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(quest_type_pool,$event);"></i>
+		</td>
+	</tr>
+</table>
+
+<hr class="clearfix">
+<i class="fa fa-3x float-right" ng-class="addingObj=='quest_type_enemy'?'fa-minus':'fa-plus'" ng-click="toggleAddingObj('quest_type_enemy');"></i>
+<label>Enemies</label>
+<table>
+	<tr>
+		<th>Enemy</th>
+		<th>Occurrence</th>
+		<th><i class="fa fa-gear"></i></th>
+	</tr>
+	<tr ng-if="addingObj=='quest_type_enemy'">
+		<td>
+			<select class="form-control" type="text" ng-model="addingVals.enemy" ng-click="$event.stopPropagation();" ng-options="op.id as op.enemy_name for op in enemies"></select>
+		</td>
+		<td>
+			<input class="form-control" type="text" ng-model="addingVals.occurrence">
+		</td>
+		<td>
+			<i class="fa fa-check" ng-click="submitAdd(addingVals,$event);"></i>
+		</td>
+	</tr>
+	<tr ng-repeat="quest_type_enemy in activeObj.quest_type_enemies">
+		<td>
+			<span ng-show="!isEditing(quest_type_pool,'quest_pool')" ng-click="doubleClickForEditing(quest_type_pool,'quest_pool',$event);">{{enemyWithId(quest_type_enemy.enemy).enemy_name;}}</span>
+			<span ng-if="isEditing(quest_type_pool,'quest_pool')">
+				<select class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();" ng-options="op.id as op.enemy_name for op in enemies"></select>
+			</span>
+		</td>
+		<td>
+			<span ng-show="!isEditing(quest_type_enemy,'occurrence')" ng-click="doubleClickForEditing(quest_type_enemy,'occurrence',$event);">{{quest_type_enemy.occurrence}}</span>
+			<span ng-if="isEditing(quest_type_enemy,'occurrence')">
+				<input class="form-control" type="text" ng-model="clickedForEditing.val" ng-click="$event.stopPropagation();">
+				<center>
+					<i class="fa fa-check fa-lg" ng-click="submitEdits(clickedForEditing.obj,clickedForEditing.ind,clickedForEditing.val,$event);"></i>
+					<i class="fa fa-close fa-lg" ng-click="stopEditing($event);"></i>
+				</center>
+			</span>
+		</td>
+		<td>
+			<i class="fa fa-close" ng-click="removeObj(quest_type_enemy,$event);"></i>
+		</td>
+	</tr>
+</table>
