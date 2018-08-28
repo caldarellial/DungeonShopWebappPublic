@@ -7,4 +7,5 @@ The following files/folders are my own original work:
 * setup.php
 * The files contained in the tabcontent directory
 * css/style.css
+
 css/main.css is a base file built through a combination of https://html5boilerplate.com/, the work of fellow Cornell student https://github.com/simeon, and myself.
